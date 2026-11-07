@@ -39,3 +39,16 @@ The catalog refreshes itself every Monday. To refresh it sooner, hit **Run workf
 - **More items per row:** in `build.yml`, change the build step to `run: PAGES=8 node build.mjs` (400 per row). Each extra page makes the build longer.
 - **Add or change rows:** edit the `CHANNELS` list at the top of `build.mjs`. Each row is just an Archive search.
 - **Search:** not supported. A static addon can't answer search queries, so browse the rows and genres instead.
+
+---
+
+# 📺 Rewind Cable
+
+A cable-style lineup of 70s–2000s TV: about 56 numbered channels (Happy Days, Cheers, Saved by the Bell, Star Trek, MST3K, The Price Is Right Barker era, Yo! MTV, Vevo 80s/90s and more). All of it comes from free, licensed, ad-supported services (Pluto TV, Samsung TV Plus, Xumo, Roku, Tubi, Plex), with their regular commercial breaks. The guide and channel links refresh every 3 hours.
+
+- **Nuvio addon:** `https://fantaaclaus.github.io/WayBackWhenTV-addon/cable/manifest.json`
+- **Live TV / IPTV playlist (channel numbers + guide):** `https://fantaaclaus.github.io/WayBackWhenTV-addon/cable/lineup.m3u`
+- **Guide (EPG):** `https://fantaaclaus.github.io/WayBackWhenTV-addon/cable/guide.xml.gz`
+- **Lineup page:** `https://fantaaclaus.github.io/WayBackWhenTV-addon/cable/`
+
+To change channel numbers, add channels or remove them, edit `lineup.json`. The next build picks up the changes.

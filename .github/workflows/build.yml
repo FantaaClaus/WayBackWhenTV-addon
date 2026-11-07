@@ -5,7 +5,7 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: "17 9 * * 1"    # every Monday, refreshes the catalog
+    - cron: "23 */3 * * *"  # every 3 hours: fresh cable guide + channel links
 
 permissions:
   contents: read
@@ -14,7 +14,7 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -25,8 +25,26 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: node build.mjs
-      - uses: actions/configure-pages@v5
+      - id: pages
+        uses: actions/configure-pages@v5
+
+      # The Internet Archive catalog only needs rebuilding once a week.
+      - id: week
+        run: echo "key=rewind-$(date -u +%G-%V)-${{ hashFiles('build.mjs') }}" >> "$GITHUB_OUTPUT"
+      - id: archive-cache
+        uses: actions/cache@v4
+        with:
+          path: public-archive
+          key: ${{ steps.week.outputs.key }}
+      - if: steps.archive-cache.outputs.cache-hit != 'true'
+        run: OUT_DIR=public-archive node build.mjs
+
+      # Cable lineup + guide: every run.
+      - run: |
+          mkdir -p public
+          cp -r public-archive/. public/
+          PAGES_URL="${{ steps.pages.outputs.base_url }}" node build-cable.mjs
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public
